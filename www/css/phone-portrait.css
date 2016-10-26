@@ -417,6 +417,7 @@ ul.listData li::hover {
   background-position-y: center;
   background-repeat: no-repeat;
   display: none;
+  cursor: pointer;
 }
 
 .overlay {
