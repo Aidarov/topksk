@@ -51,5 +51,6 @@ var KAZ = {
     "order_photos": "Өтініш суреті",
     "save_password": "Парольді сақтау",
     "order_urgent": "Жеделдігі",
-    "order_finish_time": "Орындалу мерзімі"
+    "order_finish_time": "Орындалу мерзімі",
+    "feed_text": "Хабарлама мәтіні"
 };

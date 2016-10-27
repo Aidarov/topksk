@@ -20,7 +20,7 @@
 		<script type="text/javascript" charset="utf-8" src="js/tmpl.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>	
 		<script type="text/javascript" src="js/menu.js"></script>
-		
+		<script type="text/javascript" charset="utf-8" src="js/moment.min.js"></script>
 	</head>
 	<body>
 		<div class="slideMenu">
@@ -270,11 +270,31 @@
 			<div class="content"></div>
 		</div>
 
+		<div class="page" id="feedbackAddPage">
+			<div class="header">
+				<a class = "backBtn" href="#orderListPage"> </a>
+				<span class = "header_text">{%=o.order_add_header%}</span>
+				<span class = "orderAddBtn"> </span>
+			</div>
+			<div class="content">
+				<div class="form">
+					<label for="feedbackfio">{%=o.firstName%}, {%=o.lastName%}</label>
+					<input type="text" placeholder="" id="feedbackfio" name="feedbackfio"/>
+					<label for="feedbackphone">{%=o.phone%}</label>
+					<input type="text" placeholder="" id="feedbackphone" name="feedbackphone"/>
+					<label for="feedbackemail">{%=o.email%}</label>
+					<input type="text" placeholder="" id="feedbackemail" name="feedbackemail"/>
+					<textarea id="feedText" placeholder="{%=o.feed_text%}"></textarea>
+					<!--<input type="button" value="{%=o.send%}" id="orderSendBtn" />-->
+				</div>
+			</div>
+		</div>
+
 		<div class="round-button-open" id="contextMenuOpenBtn"></div>
 		<div class="overlay">
 			<ul class="overlay-menu-list">
 				<li><a href="#orderAddPage">{%=o.send_order%}</a></li>
-				<li><a href="#">{%=o.send_feedback%}</a></li>
+				<li><a href="#feedbackAddPage">{%=o.send_feedback%}</a></li>
 				<li><div class="round-button-close" id="contextMenuOpenClose"></div></li>
 			</ul>
 		</div>

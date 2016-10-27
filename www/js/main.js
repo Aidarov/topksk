@@ -235,7 +235,7 @@ function DrawNotifyList(){
             $(".listData").append("<li><div class=\"notif_sender_field\">" + response[i].notif_sender +
                 "</div><div class=\"notif_text_field\">" + response[i].notif_text + "</div><div class=\"id_field\">" + response[i].notif_number +
                 "</div><div class=\"type_field\">" + response[i].notif_theme + "</div><div class=\"state_field\">" + response[i].notif_status +
-                "</div><div class=\"date_field\">" + new Date(response[i].dat_notif).toLocaleDateString('ru-RU') + "</div><div class=\"clear\"></div></li>");
+                "</div><div class=\"date_field\">" + moment(response[i].dat_notif.substring(0, 19), 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY') + "</div><div class=\"clear\"></div></li>");
         }
     }
 }
@@ -330,7 +330,7 @@ $("document").ready(function() {
      function hashChange() {
         var hash = window.location.hash;
         hash = hash.substring(1, hash.length);
-
+//alert('hashChange='+hash);
         //getClientData();
 
         if(config.availableContextMenu.indexOf(hash) != -1)
@@ -433,9 +433,10 @@ $("document").ready(function() {
                             $(".listOrderData").append("<li><div class=\"notif_sender_field\">" + response[i].req_user +
                                 "</div><div class=\"notif_text_field\">" + response[i].req_note + "</div><div class=\"id_field\">" +
                                 response[i].recid + "</div><div class=\"type_field\">" + response[i].req_type + "</div><div class=\"state_field\">" +
-                                response[i].req_status + "</div><div class=\"date_field\">" + new Date(response[i].dat_reg).toLocaleString('ru-RU') +
+                                response[i].req_status + "</div><div class=\"date_field\">" + moment(response[i].dat_reg.substring(0, 19), 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY HH:mm:ss') +
                                 "</div><div class=\"clear\"></div></li>");
                         }
+                            //new Date(response[i].dat_reg).toLocaleString('ru-RU')
                     }
 
                     document.location.href="#orderListPage";
@@ -504,7 +505,7 @@ $("document").ready(function() {
             });               
         }
         else {
-
+//alert('hash='+hash);
         }
     };
 
@@ -554,7 +555,7 @@ $("document").ready(function() {
                         $(".listOrderData").append("<li><div class=\"notif_sender_field\">" + response[i].req_user +
                             "</div><div class=\"notif_text_field\">" + response[i].req_note + "</div><div class=\"id_field\">" + response[i].recid +
                             "</div><div class=\"type_field\">" + response[i].req_type + "</div><div class=\"state_field\">" + response[i].req_status +
-                            "</div><div class=\"date_field\">" + new Date(response[i].dat_reg).toLocaleString('ru-RU') + "</div><div class=\"clear\"></div></li>");
+                            "</div><div class=\"date_field\">" + moment(response[i].dat_reg.substring(0, 19), 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY HH:mm:ss') + "</div><div class=\"clear\"></div></li>");
                     }
                 }
 
@@ -585,7 +586,7 @@ $("document").ready(function() {
                 $(".listData").append("<li><div class=\"notif_sender_field\">" + response[i].notif_sender + "</div><div class=\"notif_text_field\">" +
                     response[i].notif_text + "</div><div class=\"id_field\">" + response[i].notif_number + "</div><div class=\"type_field\">" +
                     response[i].notif_theme + "</div><div class=\"state_field\">" + response[i].notif_status + "</div><div class=\"date_field\">" +
-                    new Date(response[i].dat_notif).toLocaleDateString('ru-RU') + "</div><div class=\"clear\"></div></li>");
+                    moment(response[i].dat_notif.substring(0, 19), 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY') + "</div><div class=\"clear\"></div></li>");
             }
         }
         document.location.href="#notifyListPage";
@@ -616,7 +617,7 @@ $("document").ready(function() {
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     response = null;
-                    //alert("Error");
+                    alert("Error");
                     //alert(JSON.stringify(thrownError));
                     alert(JSON.stringify(xhr));
                 }

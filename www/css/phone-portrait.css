@@ -70,6 +70,7 @@ span.header_text {
   -webkit-box-shadow: -5px 0 30px -5px #6B6B6B;
   -moz-box-shadow: -5px 0 30px -5px #6B6B6B;
   box-shadow: -5px 0 30px -5px #6B6B6B;
+  cursor: pointer;
 }
 .menuHeader {
     position: fixed;
@@ -138,6 +139,7 @@ span.orderAddBtn {
   right: 0;
   left: auto;
   top: 0;
+  cursor: pointer;
 }
 
 span.file-delete-button {
@@ -145,6 +147,7 @@ span.file-delete-button {
   width: 30px;
   height: 30px;
   display: inline-block;
+  cursor: pointer;
 }
 
 /*.backBtn {
@@ -276,6 +279,7 @@ input[type="text"], input[type="password"], select, input[type="date"], textarea
 div.cameraButtons {
   width: 270px;
   margin: 5px auto 10px auto;
+  cursor: pointer;
 }
 
 div.upload-images {
@@ -384,7 +388,7 @@ ul.listOrderData li:hover {
   background-color: #CCC;
 }
 
-ul.listData li::hover {
+ul.listData li:hover {
   background-color: #CCC;
 }
 
@@ -400,6 +404,7 @@ ul.listData li::hover {
   background-position-x: center;
   background-position-y: center;
   background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 .round-button-open {
