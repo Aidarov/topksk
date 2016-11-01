@@ -1,5 +1,5 @@
 var RUS = {
-    "login_header_text": "Войти в систему, demo, 261543",
+    "login_header_text": "Войти в систему, demo, 311722",
     "login": "Логин",
     "password": "Пароль",
     "login_btn_text": "Войти",
@@ -52,5 +52,6 @@ var RUS = {
     "save_password": "Сохранить пароль",
     "order_urgent": "Срочность",
     "order_finish_time": "Срок исполнения",
-    "feed_text": "Сообщение"
+    "feed_text": "Сообщение",
+    "not_filled": "Не заполнено"
 };

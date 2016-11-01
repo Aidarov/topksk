@@ -2,6 +2,7 @@ var langItems = ["KAZ", "RUS"];
 var body_copy; 
 var langData;
 var filesToSend = [];
+var oClientData={};
 
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
@@ -14,6 +15,7 @@ function loadingBarShow() {
 }
 
 function getClientData() {
+    //alert(config.url.current);
     $.ajax({
         url: config.url.current,
         contentType: 'application/x-www-form-urlencoded',
@@ -23,7 +25,8 @@ function getClientData() {
         cache: false,
         async: false,
         success: function(data){
-            $("#firstName").text(data.user_info.first_name);
+            oClientData=data;
+            $("#firstName").text(oClientData.user_info.first_name);
             config.authorized = true;
         },
         error: function(xhr, ajaxOptions, thrownError){
@@ -45,16 +48,15 @@ function setLanguage() {
         $("#passwordField").val(localStorage.getItem("password"));
         $("#savePassword").prop("checked", true);
     }
-    var langTxt = config.langList.rus;
-
+    var langTxt = config.langList.kaz;
     if(localStorage.getItem("lang") == langTxt)
-    {        
-        langData = RUS;
+    {
+        langTxt = config.langList.kaz;
+        langData = KAZ;
         $(".language").text(langTxt);
     }
     else {
-        langTxt = config.langList.kaz;
-        langData = KAZ;
+        langData = RUS;
         $(".language").text(langTxt);
     }
 
@@ -312,7 +314,9 @@ $("document").ready(function() {
                     Authorize();
                 },
                 error: function(xhr, ajaxOptions, thrownError){
-                    alert("please check the internet connection");                    
+                    alert("please check the internet connection");
+                    alert(thrownError);
+                    alert(JSON.stringify(thrownError));
                 },
                 complete: function(event,xhr,options) {
                     $(".overlay_progress").hide();
@@ -327,11 +331,13 @@ $("document").ready(function() {
         hashChange();           
     });
 
-     function hashChange() {
+    function hashChange() {
         var hash = window.location.hash;
         hash = hash.substring(1, hash.length);
 //alert('hashChange='+hash);
         //getClientData();
+        //alert(oClientData);
+        //alert(JSON.stringify(oClientData));
 
         if(config.availableContextMenu.indexOf(hash) != -1)
         {
@@ -448,6 +454,12 @@ $("document").ready(function() {
                 }
             });
         }
+        else if(hash == "feedbackAddPage")
+        {
+            $('#feedbackfio').val(oClientData.user_info.first_name+' '+oClientData.user_info.last_name);
+            $('#feedbackphone').val(oClientData.user_info.phone_number);
+            $('#feedbackemail').val(oClientData.user_info.email);
+        }
         else if(hash == "orderFilterPage")
         {
             $('#orderDateFrom').val(new Date().toDateInputValue());
@@ -509,7 +521,7 @@ $("document").ready(function() {
         }
     };
 
-    $(document).on("click", "#orderFilterBtn", function(){
+    $(document).on("click","#orderFilterBtn", function(){
         var langId = config.lang();
 
         var dataToPost = {};
@@ -648,11 +660,11 @@ $("document").ready(function() {
         }, 500);        
     });
 
-    $(document).on("click", "#orderPhotoShowBtn", function(){
+    $(document).on("click","#orderPhotoShowBtn", function(){
         document.location.hash = "orderLookUpPhotoPage";
     });
     
-    $(document).on("click", "#reg_btn", function(){
+    $(document).on("click","#reg_btn", function(){
         var dataToPost = {
             email: $('#reg_email').val(),
             password: $('#reg_password').val(),
@@ -833,6 +845,8 @@ $("document").ready(function() {
         updateLanguage();
     });
     function getBase64(file) {
+        //alert('getBase64 begin');
+        //alert(file.lastModifiedDate.toISOString());
         $(".overlay_progress").show();
         var reader = new FileReader();
         reader.readAsDataURL(file);
@@ -842,7 +856,7 @@ $("document").ready(function() {
             filesToSend.push({
                 content: fileContent,
                 file: {},
-                modified: file.lastModifiedDate.toISOString(),
+                modified: new Date(file.lastModifiedDate).toISOString(),
                 name: file.name,
                 size: file.size,
                 type: file.type,
@@ -977,48 +991,215 @@ $("document").ready(function() {
     }
 
     $(document).on("click", ".orderAddBtn", function(){
-        $(".overlay_progress").show();
+        var cur_btn=$(this);
+        //alert('id='+$(cur_btn).attr('id'));
 
-        setTimeout(function() {
-            var dataToPost = {
-                req_subtype: parseInt($("#orderType").val()),
-                //req_priority: rec.cr_req_priority,
-                req_flat: parseInt($("#orderAddress").val()),
-                note: $("#orderText").val(),
-                userId: 1,
-                req_status: 1,
-                dead_line: 'null',
-                sqlpath: 'insert_cit_req',
-                t_language_id: 1,
-                userMail: 1
-            };
-
-            $.ajax({
-                url: config.url.insReq,
-                type: 'post',
-                timeout: config.timeout,
-                contentType: 'application/json;charset=UTF-8',
-                async: false,
-                data: JSON.stringify(dataToPost),
-                beforeSend : function(xhr, opts){
-                    $(".overlay_progress").show();
-                },
-                success: function (result) {
-                    var req_id = parseInt(result);
-                    for(var i = 0; i < filesToSend.length; i++)
-                    {
-                        filesToSend[i].req_id = req_id;
-                    }
-                    sendImageXHR();                
-                },
-                error: function() {
-                    alert("error occured while adding order");
-                },
-                complete: function(event,xhr,options) {
-                    $(".overlay_progress").hide();
+        switch ($(cur_btn).attr('id')) {
+            case 'orderAddBtn':
+                var orderText = $("#orderText").val().trim();
+                var orderType = parseInt($("#orderType").val());
+                var orderAddress = parseInt($("#orderAddress").val());
+                var validated = true;
+                if(isNaN(orderType))
+                {
+                    $("[for=\"orderType\"]").show();
+                    validated = false;
                 }
-            });
-        }, 500);
+                else
+                {
+                    $("[for=\"orderType\"]").hide();
+                }
+                if(isNaN(orderAddress))
+                {
+                    $("[for=\"orderAddress\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"orderAddress\"]").hide();
+                }
+                if(orderText == "")
+                {
+                    $("[for=\"orderText\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"orderText\"]").hide();
+                }
+                if (validated!=true){
+                    return validated;
+                }
+                $(".overlay_progress").show();
+
+                setTimeout(function () {
+                    var dataToPost = {
+                        req_subtype: parseInt($("#orderType").val()),
+                        req_flat: parseInt($("#orderAddress").val()),
+                        note: $("#orderText").val(),
+                        userId: 1,
+                        req_status: 1,
+                        dead_line: 'null',
+                        sqlpath: 'insert_cit_req',
+                        t_language_id: 1,
+                        userMail: 1
+                    };
+                    $.ajax({
+                        url: config.url.insReq,
+                        type: 'post',
+                        timeout: config.timeout,
+                        contentType: 'application/json;charset=UTF-8',
+                        async: false,
+                        data: JSON.stringify(dataToPost),
+                        beforeSend: function (xhr, opts) {
+                            $(".overlay_progress").show();
+                        },
+                        success: function (result) {
+                            var req_id = parseInt(result);
+                            for (var i = 0; i < filesToSend.length; i++) {
+                                filesToSend[i].req_id = req_id;
+                            }
+                            sendImageXHR();
+                        },
+                        error: function () {
+                            alert("error occured while adding order");
+                        },
+                        complete: function (event, xhr, options) {
+                            $(".overlay_progress").hide();
+                        }
+                    });
+                }, 500);
+                break;
+            case 'feedAddBtn':
+                var feedbackfio = $("#feedbackfio").val().trim();
+                //alert('feedbackfio='+feedbackfio);
+                var feedbackphone = $("#feedbackphone").val().trim();
+                //alert('feedbackfio='+feedbackfio);
+                var feedbackemail= $("#feedbackemail").val().trim();
+                //alert('feedbackfio='+feedbackfio);
+                var feedText= $("#feedText").val().trim();
+                //alert('feedbackfio='+feedbackfio);
+                var validated = true;
+
+                //alert('go if ');
+
+                if(feedbackfio=="")
+                {
+                    $("[for=\"feedbackfio\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"feedbackfio\"]").hide();
+                }
+                if(feedbackphone=="")
+                {
+                    $("[for=\"feedbackphone\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"feedbackphone\"]").hide();
+                }
+                if(feedbackemail == "")
+                {
+                    $("[for=\"feedbackemail\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"feedbackemail\"]").hide();
+                }
+                if(feedText == "")
+                {
+                    $("[for=\"feedText\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"feedText\"]").hide();
+                }
+                /*
+                setTimeout(function () {
+                    var dataToPost = {
+                        req_subtype: parseInt($("#orderType").val()),
+                        req_flat: parseInt($("#orderAddress").val()),
+                        note: $("#orderText").val(),
+                        userId: 1,
+                        req_status: 1,
+                        dead_line: 'null',
+                        sqlpath: 'insert_cit_req',
+                        t_language_id: 1,
+                        userMail: 1
+                    };
+
+                    $.ajax({
+                        url: config.url.insReq,
+                        type: 'post',
+                        timeout: config.timeout,
+                        contentType: 'application/json;charset=UTF-8',
+                        async: false,
+                        data: JSON.stringify(dataToPost),
+                        beforeSend: function (xhr, opts) {
+                            $(".overlay_progress").show();
+                        },
+                        success: function (result) {
+                            var req_id = parseInt(result);
+                            for (var i = 0; i < filesToSend.length; i++) {
+                                filesToSend[i].req_id = req_id;
+                            }
+                            sendImageXHR();
+                        },
+                        error: function () {
+                            alert("error occured while adding order");
+                        },
+                        complete: function (event, xhr, options) {
+                            $(".overlay_progress").hide();
+                        }
+                    });
+                }, 500);*/
+                if (validated!=true){
+                    return validated;
+                }
+                //alert('go ajax');
+                $(".overlay_progress").show();
+
+                setTimeout(function () {
+                    var dataToPost = {
+                        flname: feedbackfio,
+                        phonenum: feedbackphone,
+                        guestemail: feedbackemail,
+                        comments: feedText,
+                        sqlpath: 'insert_guest_feeedback',
+                        g_ip: 1
+                    };
+                    //alert(JSON.stringify(dataToPost));
+                    $(".overlay_progress").show();
+                    $.ajax({
+                        url: config.url.insReq,
+                        type: 'post',
+                        timeout: config.timeout,
+                        contentType: 'application/json;charset=UTF-8',
+                        async: false,
+                        data: JSON.stringify(dataToPost),
+                        success: function (result) {
+                            //var req_id = parseInt(result);
+                            //alert('Ok, result='+JSON.stringify(result));
+
+                        },
+                        error: function () {
+                            alert("error occured while adding feed");
+                        },
+                        complete: function (event, xhr, options) {
+                            $(".overlay_progress").hide();
+                            document.location.href="#orderListPage";
+                        }
+                    });
+                }, 500);
+                break;
+            default:
+                alert("Неизвестная кнопка");
+        }
     });
 
     $(document).on("keyup", "#passwordField", function(){
