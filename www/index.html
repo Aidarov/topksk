@@ -28,6 +28,7 @@
 				<li class="header" id="firstName"></li>
 				<li link="notifyListPage">{%=o.notify_list_header%}</li>
 				<li link="orderListPage">{%=o.order_list_header%}</li>
+				<li link="addrListPage">{%=o.address_list%}</li>
 				<li link="languagePage">{%=o.language%}</li>
 				<li link="exit">{%=o.exit%}</li>
 			</ul>
@@ -41,9 +42,9 @@
 			
 			<div class="content">
 				<div class="form">
-					<label for="loginField" class="warning">Error login</label>
+					<label for="loginField" class="warning">{%=o.not_filled%}</label>
 					<input type="text" placeholder="{%=o.login%}" id="loginField" name="loginField"/>
-					<label for="passwordField" class="warning">Error password</label>
+					<label for="passwordField" class="warning">{%=o.not_filled%}</label>
 					<div class="text-container">
 						<input type="password" placeholder="{%=o.password%}" id="passwordField" />
 						<span id="visiblePassword" class="visiblePassword"></span>
@@ -94,15 +95,15 @@
 			</div>
 			<div class="content">
 				<div class="form">
-					<label for="reg_email" class="warning">Correct email</label>
+					<label for="reg_email" class="warning">{%=o.not_filled%}</label>
 					<input type="text"  placeholder="{%=o.email%}" id="reg_email" name="reg_email"/>
-					<label for="reg_password" class="warning">Correct password</label>
+					<label for="reg_password" class="warning">{%=o.not_filled%}</label>
 					<input type="password" placeholder="{%=o.password%}" id="reg_password" name="reg_password" />
-					<label for="reg_firstname" class="warning">Correct name</label>
+					<label for="reg_firstname" class="warning">{%=o.not_filled%}</label>
 					<input type="text"  placeholder="{%=o.firstName%}" id="reg_firstname" name="reg_firstname" />
-					<label for="reg_lastname" class="warning">Correct lastName</label>
+					<label for="reg_lastname" class="warning">{%=o.not_filled%}</label>
 					<input type="text"  placeholder="{%=o.lastName%}" id="reg_lastname" name="reg_lastname" />
-					<label for="reg_phone" class="warning">Correct Phone</label>
+					<label for="reg_phone" class="warning">{%=o.not_filled%}</label>
 					<input type="text"  placeholder="{%=o.phone%}" id="reg_phone" name="reg_phone" />
 					<input type="button" value="{%=o.registration%}" id="reg_btn" name="reg_btn" />
 				</div>
@@ -177,16 +178,19 @@
 			<div class="header">
 				<a class = "backBtn" href="#orderListPage"> </a>
 				<span class = "header_text">{%=o.order_add_header%}</span>
-				<span class = "orderAddBtn"> </span>
+				<span class = "orderAddBtn" id="orderAddBtn"> </span>
 			</div>            
 			<div class="content">
-				<div class="form">					
+				<div class="form">
+					<label for="orderType" class="warning">{%=o.not_filled%}</label>
 					<select class="listofitem" id="orderType">
 						<option>{%=o.order_type%}</option>
 					</select>
+					<label for="orderAddress" class="warning">{%=o.not_filled%}</label>
 					<select class="listofitem" id="orderAddress">
 						<option>{%=o.order_address%}</option>
 					</select>
+					<label for="orderText" class="warning">{%=o.not_filled%}</label>
 					<textarea id="orderText" placeholder="{%=o.order_text%}"></textarea>
 					<div class="cameraButtons">						
 						<!--<span class="attachFileBtn"></span>-->
@@ -197,6 +201,7 @@
 				</div>
 			</div>           
 		</div>
+
 		<div class="page" id="orderFilterPage">
 			<div class="header">
 				<a class = "backBtn" href="#orderListPage"> </a>
@@ -273,20 +278,36 @@
 		<div class="page" id="feedbackAddPage">
 			<div class="header">
 				<a class = "backBtn" href="#orderListPage"> </a>
-				<span class = "header_text">{%=o.order_add_header%}</span>
-				<span class = "orderAddBtn"> </span>
+				<span class = "header_text">{%=o.send_feedback%}</span>
+				<span class = "orderAddBtn" id="feedAddBtn"> </span>
 			</div>
 			<div class="content">
 				<div class="form">
 					<label for="feedbackfio">{%=o.firstName%}, {%=o.lastName%}</label>
-					<input type="text" placeholder="" id="feedbackfio" name="feedbackfio"/>
+					<label for="feedbackfio" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="feedbackfio" name="feedbackfio"/>
 					<label for="feedbackphone">{%=o.phone%}</label>
-					<input type="text" placeholder="" id="feedbackphone" name="feedbackphone"/>
+					<label for="feedbackphone" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="feedbackphone" name="feedbackphone"/>
 					<label for="feedbackemail">{%=o.email%}</label>
-					<input type="text" placeholder="" id="feedbackemail" name="feedbackemail"/>
-					<textarea id="feedText" placeholder="{%=o.feed_text%}"></textarea>
+					<label for="feedbackemail" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="feedbackemail" name="feedbackemail"/>
+					<label for="feedText">{%=o.feed_text%}</label>
+					<label for="feedText" class="warning">{%=o.not_filled%}</label>
+					<textarea id="feedText"></textarea>
 					<!--<input type="button" value="{%=o.send%}" id="orderSendBtn" />-->
 				</div>
+			</div>
+		</div>
+
+		<div class="page" id="addrListPage">
+			<div class="header">
+				<span class = "menuBtn"></span>
+				<span class = "header_text">{%=o.address_list%}</span>
+			</div>
+			<div class="content">
+				<ul class="listAddrData">
+				</ul>
 			</div>
 		</div>
 

@@ -58,7 +58,6 @@ span.header_text {
   text-overflow:ellipsis;
 }
 
-
 .page {
   margin: 0;
 	padding: 0;
@@ -76,42 +75,6 @@ span.header_text {
     position: fixed;
     left: 0;
 }
-/*header {
-    width: 100%;
-    background: rgb(139, 184, 54);    
-    display : flex;
-    align-items : center;
-    position: fixed;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    color: #fff;
-    font-family: Arial;
-    top: 0;
-    -webkit-box-shadow: 0 3px 10px -2px #6B6B6B;
-    -moz-box-shadow: 0 3px 10px -2px #6B6B6B;
-    box-shadow: 0 3px 10px -2px #6B6B6B;
-    height: 70px;
-}*/
-/*.menuBtn{
-  width: 40px;
-  float: left;
-  padding-left: 10px;
-  height: 70px;
-  background: url('../img/bars.png') center center no-repeat;
-  visibility: hidden;
-}*/
-
-
-
-/*.head_text {
-  width: 100%;
-  text-align: center;
-}*/
-
-/*.language {
-  padding-right: 10px;
-  float: right;
-}*/
 
 .blank2 {
   padding-right: 10px;
@@ -150,18 +113,6 @@ span.file-delete-button {
   cursor: pointer;
 }
 
-/*.backBtn {
-  width: 40px;
-  height: 70px;
-  float: left;
-}
-.backBtn a{
-  display: block;
-  width: inherit;
-  height: inherit;
-	z-index: 1;
-	background: url('../img/back.png') center center no-repeat;
-}*/
 a.backBtn {
   width: 40px;
   height: 60px;
@@ -201,13 +152,13 @@ ul {
   padding: 0;
   list-style: none;
 }
-ul.listData li, ul.listOrderData li {
+ul.listData li, ul.listOrderData li, ul.listAddrData li {
   margin: 0;
   padding: 10px 20px 10px 20px;
   border-bottom: 1px solid rgb(139, 184, 54);
 }
 
-ul.listData li div, ul.listOrderData li div {
+ul.listData li div, ul.listOrderData li div, ul.listAddrData li div {
   margin: 0 0 3px 0;
 }
 
@@ -317,7 +268,6 @@ a:hover{
   color: #1abc9d;
 }
 
-
 ::-webkit-input-placeholder {
    color: gray;
 }
@@ -333,19 +283,6 @@ a:hover{
 :-ms-input-placeholder {  
    color: gray;  
 }
-
-
-
-/*.menuBtn{
-	position: fixed;
-	width: 40px;
-	top: 0;
-	left: 0;
-	height: 70px;
-	z-index: 1;
-	background: url('../img/bars.png') center center no-repeat;
-}*/
-
 
 .slideMenu {
   width:260px;
@@ -542,8 +479,6 @@ ul.overlay-menu-list li a {
 		-moz-animation-delay:1.35s;
 }
 
-
-
 @keyframes bounce_circleG{
 	0%{}
 
@@ -599,6 +534,10 @@ ul.overlay-menu-list li a {
 }
 
 .notif_sender_field{
+  display: none;
+}
+
+.notif_id_field{
   display: none;
 }
 

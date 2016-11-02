@@ -53,5 +53,6 @@ var KAZ = {
     "order_urgent": "Жеделдігі",
     "order_finish_time": "Орындалу мерзімі",
     "feed_text": "Хабарлама мәтіні",
-    "not_filled": "Толтырылмады"
+    "not_filled": "Толтырылмады",
+    "address_list": "Мекен-жайлар"
 };

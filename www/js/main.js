@@ -16,23 +16,25 @@ function loadingBarShow() {
 
 function getClientData() {
     //alert(config.url.current);
-    $.ajax({
-        url: config.url.current,
-        contentType: 'application/x-www-form-urlencoded',
-        crossDomain: true,
-        processData: false,
-        timeout: this.timeout,
-        cache: false,
-        async: false,
-        success: function(data){
-            oClientData=data;
-            $("#firstName").text(oClientData.user_info.first_name);
-            config.authorized = true;
-        },
-        error: function(xhr, ajaxOptions, thrownError){
-            config.authorized = false;
-        }
-    });
+    if (config.authorized) {
+        $.ajax({
+            url: config.url.current,
+            contentType: 'application/x-www-form-urlencoded',
+            crossDomain: true,
+            processData: false,
+            timeout: this.timeout,
+            cache: false,
+            async: false,
+            success: function(data){
+                oClientData=data;
+                $("#firstName").text(oClientData.user_info.first_name);
+                config.authorized = true;
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                config.authorized = false;
+            }
+        });
+    }
 }
 
 function setLanguage() {
@@ -133,7 +135,7 @@ function getUserAddress()
     };
 
     $.ajax({
-        url: config.url.userAddresses,
+        url: config.url.spr_oth,
         type: 'post',
         contentType: 'application/json;charset=UTF-8',
         timeout: config.timeout,
@@ -203,7 +205,7 @@ function GetList(date, status, theme, notifid) {
                         sqlpath: 'sprav/get_notification'
                     };
 
-    $.ajax({url: config.url.notify_list,
+    $.ajax({url: config.url.spr_oth,
         type: 'post',
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify(dataToPost),
@@ -335,7 +337,7 @@ $("document").ready(function() {
         var hash = window.location.hash;
         hash = hash.substring(1, hash.length);
 //alert('hashChange='+hash);
-        //getClientData();
+        getClientData();
         //alert(oClientData);
         //alert(JSON.stringify(oClientData));
 
@@ -454,11 +456,54 @@ $("document").ready(function() {
                 }
             });
         }
+        else if(hash == "addrListPage")
+        {
+            var langId = config.lang();
+            var dataToPost = {sqlpath: 'sprav/cit_address', lang_id: langId, userId: 1};
+            $.ajax({
+                url: config.url.spr_oth,
+                type: 'post',
+                contentType: 'application/json;charset=UTF-8',
+                async: false,
+                timeout: config.timeout,
+                data: JSON.stringify(dataToPost),
+                beforeSend : function(xhr, opts){
+                    $(".overlay_progress").show();
+                },
+                success: function (response) {
+                    $(".listAddrData").html("");
+//alert(JSON.stringify(response));
+                    if(response != null)
+                    {
+                        for(var i = 0; i < response.length; i++)
+                        {
+                            $(".listAddrData").append("<li>"+
+                                "<div class=\"type_field\">" + response[i].street + ", " + response[i].building + ", " + response[i].flat + "</div>"+
+                                "<div class=\"state_field\">" + response[i].status + "</div>"+
+                                "<div class=\"type_field\">"+ response[i].ksk_description + "</div>"+
+                                "<div class=\"notif_id_field\">" + response[i].recid + "</div>"+
+                                "<div class=\"clear\">" + "</div>"+
+                                "</li>");
+                        }
+                        //new Date(response[i].dat_reg).toLocaleString('ru-RU')
+                    }
+
+                    document.location.href="#addrListPage";
+                },
+                error: function (result) {
+                },
+                complete: function(event,xhr,options) {
+                    $(".overlay_progress").hide();
+                }
+            });
+        }
         else if(hash == "feedbackAddPage")
         {
-            $('#feedbackfio').val(oClientData.user_info.first_name+' '+oClientData.user_info.last_name);
-            $('#feedbackphone').val(oClientData.user_info.phone_number);
-            $('#feedbackemail').val(oClientData.user_info.email);
+            if (config.authorized){
+                $('#feedbackfio').val(oClientData.user_info.first_name+' '+oClientData.user_info.last_name);
+                $('#feedbackphone').val(oClientData.user_info.phone_number);
+                $('#feedbackemail').val(oClientData.user_info.email);
+            }
         }
         else if(hash == "orderFilterPage")
         {
@@ -658,6 +703,28 @@ $("document").ready(function() {
             $("#orderUrgentLookUp").val(data.req_priority);
             $("#orderLookUpText").val(data.req_note);            
         }, 500);        
+    });
+
+    $(document).on("click","ul.listAddrData li", function(){
+        var thisElem = this;
+        alert('listAddrData, '+ $(thisElem).find(".notif_id_field").text());
+        /*$(".overlay_progress").show();
+        setTimeout(function(){
+            document.location.href="#orderLookUpPage";
+            var id = parseInt($(thisElem).find(".id_field").text());
+            var data = getOrderByid(id)[0];
+            var images = getImage(id);
+            $("#orderLookUpPhotoPage .content").html("");
+            for(var i = 0; i < images.length; i++)
+            {
+                $("#orderLookUpPhotoPage .content").append("<img src=" + config.url.root + images[i].file_id + " class=\"gallery\" />");
+            }
+            $("#orderSubTypeLookUp").val(data.req_subtype);
+            $("#orderTypeLookUp").val(data.req_type);
+            $("#orderAddressLookUp").val(data.req_address);
+            $("#orderUrgentLookUp").val(data.req_priority);
+            $("#orderLookUpText").val(data.req_note);
+        }, 500);*/
     });
 
     $(document).on("click","#orderPhotoShowBtn", function(){
