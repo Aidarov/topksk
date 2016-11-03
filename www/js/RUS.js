@@ -1,5 +1,5 @@
 var RUS = {
-    "login_header_text": "Войти в систему, demo, 021448",
+    "login_header_text": "Войти в систему, demo, 031428",
     "login": "Логин",
     "password": "Пароль",
     "login_btn_text": "Войти",
@@ -54,5 +54,12 @@ var RUS = {
     "order_finish_time": "Срок исполнения",
     "feed_text": "Сообщение",
     "not_filled": "Не заполнено",
-    "address_list": "Адреса"
+    "address_list": "Адреса",
+    "addr_add": "Добавить адрес",
+    "city": "Город",
+    "street": "Улица / Микрорайон",
+    "building": "Здание / дом",
+    "drob_corp": "Дробь / корпус",
+    "flat": "Квартира",
+    "drob": "Дробь"
 };

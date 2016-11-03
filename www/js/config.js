@@ -3,6 +3,7 @@ var rhost="https://demo.topksk.kz/";
 var config = {
     timeout: 15000,
     url : {
+        root: rhost,
         current : rhost + "supplierProfile/employees/current",
         login : rhost + "login",
         spr_oth : rhost + "sprav/other",
@@ -10,11 +11,11 @@ var config = {
         restore_password : rhost + "auth?send_pass_reset_code&role_code=",
         uploadImage2 : rhost + "reqs/uploadImage2",
         insReq : rhost + "reqs/insreq",
-        reqType: rhost + "sprav/main",
+        sprMain: rhost + "sprav/main",
+        sprSub: rhost + "sprav/sub",
         orderList: rhost + "search/reqs",
         imageUrl: rhost + "sprav/subid",
-        logout: rhost + "logout",
-        root: rhost
+        logout: rhost + "logout"
     },
     lang: function() {
         return (localStorage.getItem("lang") == "RUS") ? 1 : 2;

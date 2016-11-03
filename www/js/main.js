@@ -78,7 +78,7 @@ function getOrderReqType()
     var response = [];
 
     $.ajax({
-        url: config.url.reqType,
+        url: config.url.sprMain,
         type: 'post',
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify(dataToPost),
@@ -106,7 +106,7 @@ function getStatuses()
     var response = [];
 
     $.ajax({
-        url: config.url.reqType,
+        url: config.url.sprMain,
         type: 'post',
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify(dataToPost),
@@ -243,6 +243,56 @@ function DrawNotifyList(){
         }
     }
 }
+
+function getCityList()
+{
+    var langId = config.lang();
+    var dataToPost = {
+        lang_id: langId,
+        name: "all_city"
+    };
+    var response = [];
+    $.ajax({
+        url: config.url.sprMain,
+        type: 'post',
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify(dataToPost),
+        timeout: config.timeout,
+        async: false,
+        success: function (result) {
+            response = result;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return response;
+}
+
+function getStreetList(city_id)
+{
+    var langId = config.lang();
+    var dataToPost = {
+        lang_id: langId,
+        name: "all_street",
+        sid: city_id
+    };
+    var response = [];
+    $.ajax({
+        url: config.url.sprSub,
+        type: 'post',
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify(dataToPost),
+        timeout: config.timeout,
+        async: false,
+        success: function (result) {
+            response = result;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return response;
+}
+
 
 $("document").ready(function() {
     getClientData();
@@ -543,6 +593,26 @@ $("document").ready(function() {
             }
 
         }
+        else if(hash == "addrAddPage")
+        {
+            if (config.authorized){
+                $(".overlay_progress").show();
+                var citylist = getCityList();
+                $("#addrCity").append($("<option/>", {
+                    value: "",
+                    text : ""
+                }));
+                for(var i = 0; i < citylist.length; i++)
+                {
+                    $("#addrCity").append($("<option/>", {
+                        value: citylist[i].id,
+                        text : citylist[i].text
+                    }));
+                }
+                $(".overlay_progress").hide();
+            }
+        }
+
         else if(hash == "exit" && config.authorized)
         {
             $.ajax({
@@ -565,6 +635,158 @@ $("document").ready(function() {
 //alert('hash='+hash);
         }
     };
+
+    function isValidEmailAddress(emailAddress) {
+        var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+        return pattern.test(emailAddress);
+    };
+
+    function getImage(suid)
+    {
+        var dataToPost = {
+            name: "cur_image",
+            sid: parseInt(suid)
+        };
+
+        var response = {};
+
+        $.ajax({url: config.url.imageUrl,
+            type: 'post',
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify(dataToPost),
+            timeout: config.timeout,
+            async: false,
+            success: function (data, textStatus, request) {
+                response = data;
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                response = null;
+            },
+            complete: function(event,xhr,options) {
+                $(".overlay_progress").hide();
+            }
+        });
+        return response;
+    }
+
+    function getOrderByid(id)
+    {
+        var langId = config.lang();
+
+        var dataToPost = {
+            citreqs: 1,
+            id: parseInt(id),
+            lang_id: langId
+        };
+
+        var response = [];
+
+        $.ajax({
+            url: config.url.orderList,
+            type: 'post',
+            contentType: 'application/json;charset=UTF-8',
+            timeout: config.timeout,
+            async: false,
+            data: JSON.stringify(dataToPost),
+            beforeSend : function(xhr, opts){
+                $(".overlay_progress").show();
+            },
+            success: function (result) {
+                response = result;
+            },
+            error: function (result) {
+                response = [];
+            },
+            complete: function(event,xhr,options) {
+                $(".overlay_progress").hide();
+            }
+        });
+
+        return response;
+    }
+
+    function getBase64(file) {
+        //alert('getBase64 begin');
+        //alert(file.lastModifiedDate.toISOString());
+        $(".overlay_progress").show();
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            var fileContent = this.result.substring(this.result.indexOf("base64") + 7);
+            var guid = config.guid();
+            filesToSend.push({
+                content: fileContent,
+                file: {},
+                modified: new Date(file.lastModifiedDate).toISOString(),
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                req_id: guid
+            });
+
+            $(".overlay_progress").hide();
+            drawBase64(this.result, guid);
+
+        };
+        reader.onerror = function (error) {
+            alert("file not formatted");
+        };
+    }
+
+    /*$(".attachFileBtn").on("click", function() {
+     $("#imageUploadBtn").trigger("click");
+     });*/
+
+    function drawBase64(base64Image, guid) {
+        $(".cameraButtons").after("<div class=\"upload-images\" index="+guid+">\
+            <img src="+base64Image+" /><span class=\"file-delete-button\"></span>\
+        </div>");
+    }
+
+    function sendImageXHR() {
+        $.ajax({url: config.url.uploadImage2,
+            type: 'post',
+            contentType: 'application/json;charset=UTF-8',
+            timeout: config.timeout,
+            data: JSON.stringify(filesToSend),
+            async: false,
+            success: function (data, textStatus, request) {
+                response = data;
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                response = null;
+            },
+            complete: function(data)
+            {
+                document.location.href="#orderListPage";
+            }
+        });
+    }
+
+    function getFileContentAsBase64(path,callback){
+        window.resolveLocalFileSystemURL(path, gotFile, fail);
+
+        function fail(e) {
+            alert('Cannot found requested file');
+        }
+
+        function gotFile(fileEntry) {
+            fileEntry.file(function(file) {
+                var reader = new FileReader();
+                reader.onloadend = function(e) {
+                    var content = this.result,
+                        fileSize = file.size,
+                        fileName = file.name,
+                        fileType = file.type,
+                        fileModifiedTime = new Date(file.lastModifiedDate).toISOString();
+
+
+                    callback(content, fileSize, fileName, fileType, fileModifiedTime);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
 
     $(document).on("click","#orderFilterBtn", function(){
         var langId = config.lang();
@@ -707,7 +929,7 @@ $("document").ready(function() {
 
     $(document).on("click","ul.listAddrData li", function(){
         var thisElem = this;
-        alert('listAddrData, '+ $(thisElem).find(".notif_id_field").text());
+        //alert('listAddrData, '+ $(thisElem).find(".notif_id_field").text());
         /*$(".overlay_progress").show();
         setTimeout(function(){
             document.location.href="#orderLookUpPage";
@@ -833,75 +1055,6 @@ $("document").ready(function() {
         }
     });
 
-    function isValidEmailAddress(emailAddress) {
-        var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
-        return pattern.test(emailAddress);
-    };
-    
-    function getImage(suid)
-    {
-        var dataToPost = {
-            name: "cur_image",
-            sid: parseInt(suid)            
-        };
-        
-        var response = {};
-        
-        $.ajax({url: config.url.imageUrl,
-            type: 'post',
-            contentType: 'application/json;charset=UTF-8',
-            data: JSON.stringify(dataToPost),
-            timeout: config.timeout,
-            async: false,
-            success: function (data, textStatus, request) {
-                response = data;
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                response = null;
-            },
-            complete: function(event,xhr,options) {
-                $(".overlay_progress").hide();
-            }
-        });        
-        return response;
-    }
-    
-    function getOrderByid(id)
-    {
-        var langId = config.lang();
-        
-        var dataToPost = {
-            citreqs: 1,
-            id: parseInt(id),
-            lang_id: langId
-        };
-        
-        var response = [];
-        
-        $.ajax({
-            url: config.url.orderList,
-            type: 'post',
-            contentType: 'application/json;charset=UTF-8',
-            timeout: config.timeout,
-            async: false,
-            data: JSON.stringify(dataToPost),
-            beforeSend : function(xhr, opts){
-                $(".overlay_progress").show();
-            },
-            success: function (result) {
-                response = result;
-            },
-            error: function (result) {
-                response = [];
-            },
-            complete: function(event,xhr,options) {
-                $(".overlay_progress").hide();
-            }
-        });
-        
-        return response;
-    }
-
     $(document).on("change", "#languageList", function(){
         updateLanguage();
         $(".page").hide();
@@ -911,67 +1064,11 @@ $("document").ready(function() {
     $(document).on("click", ".language", function(){
         updateLanguage();
     });
-    function getBase64(file) {
-        //alert('getBase64 begin');
-        //alert(file.lastModifiedDate.toISOString());
-        $(".overlay_progress").show();
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            var fileContent = this.result.substring(this.result.indexOf("base64") + 7);
-            var guid = config.guid();
-            filesToSend.push({
-                content: fileContent,
-                file: {},
-                modified: new Date(file.lastModifiedDate).toISOString(),
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                req_id: guid
-            });
 
-            $(".overlay_progress").hide();
-            drawBase64(this.result, guid);
-            
-        };
-        reader.onerror = function (error) {
-            alert("file not formatted");
-        };
-    }
-    
-    /*$(".attachFileBtn").on("click", function() {
-        $("#imageUploadBtn").trigger("click");
-    });*/
-    
     $(document).on("change", "#imageUploadBtn", function(){
         var file = document.querySelector('input[type=file]').files[0]
         getBase64(file);        
     });
-
-    function getFileContentAsBase64(path,callback){
-        window.resolveLocalFileSystemURL(path, gotFile, fail);
-                
-        function fail(e) {
-                alert('Cannot found requested file');
-        }
-    
-        function gotFile(fileEntry) {
-                fileEntry.file(function(file) {
-                    var reader = new FileReader();
-                    reader.onloadend = function(e) {
-                        var content = this.result,
-                            fileSize = file.size,
-                            fileName = file.name,
-                            fileType = file.type,
-                            fileModifiedTime = new Date(file.lastModifiedDate).toISOString();                       
-                        
-                            
-                        callback(content, fileSize, fileName, fileType, fileModifiedTime);
-                    };
-                    reader.readAsDataURL(file);
-                });
-        }
-    }
 
     $(document).on("click", ".cameraBtn", function() {
         var options = {
@@ -1031,38 +1128,11 @@ $("document").ready(function() {
         $(this).parent().remove();
     });
 
-    function drawBase64(base64Image, guid) {
-        $(".cameraButtons").after("<div class=\"upload-images\" index="+guid+">\
-            <img src="+base64Image+" /><span class=\"file-delete-button\"></span>\
-        </div>");
-    }
-
-    function sendImageXHR() {
-        $.ajax({url: config.url.uploadImage2,
-            type: 'post',
-            contentType: 'application/json;charset=UTF-8',
-            timeout: config.timeout,
-            data: JSON.stringify(filesToSend),
-            async: false,
-            success: function (data, textStatus, request) {
-                response = data;
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                response = null;
-            },
-            complete: function(data)
-            {
-                document.location.href="#orderListPage";
-            }
-        });
-    }
-
     $(document).on("click", ".orderAddBtn", function(){
         var cur_btn=$(this);
-        //alert('id='+$(cur_btn).attr('id'));
-
         switch ($(cur_btn).attr('id')) {
             case 'orderAddBtn':
+            {
                 var orderText = $("#orderText").val().trim();
                 var orderType = parseInt($("#orderType").val());
                 var orderAddress = parseInt($("#orderAddress").val());
@@ -1098,7 +1168,6 @@ $("document").ready(function() {
                     return validated;
                 }
                 $(".overlay_progress").show();
-
                 setTimeout(function () {
                     var dataToPost = {
                         req_subtype: parseInt($("#orderType").val()),
@@ -1136,20 +1205,15 @@ $("document").ready(function() {
                         }
                     });
                 }, 500);
+            }
                 break;
             case 'feedAddBtn':
+            {
                 var feedbackfio = $("#feedbackfio").val().trim();
-                //alert('feedbackfio='+feedbackfio);
                 var feedbackphone = $("#feedbackphone").val().trim();
-                //alert('feedbackfio='+feedbackfio);
                 var feedbackemail= $("#feedbackemail").val().trim();
-                //alert('feedbackfio='+feedbackfio);
                 var feedText= $("#feedText").val().trim();
-                //alert('feedbackfio='+feedbackfio);
                 var validated = true;
-
-                //alert('go if ');
-
                 if(feedbackfio=="")
                 {
                     $("[for=\"feedbackfio\"]").show();
@@ -1187,50 +1251,48 @@ $("document").ready(function() {
                     $("[for=\"feedText\"]").hide();
                 }
                 /*
-                setTimeout(function () {
-                    var dataToPost = {
-                        req_subtype: parseInt($("#orderType").val()),
-                        req_flat: parseInt($("#orderAddress").val()),
-                        note: $("#orderText").val(),
-                        userId: 1,
-                        req_status: 1,
-                        dead_line: 'null',
-                        sqlpath: 'insert_cit_req',
-                        t_language_id: 1,
-                        userMail: 1
-                    };
+                 setTimeout(function () {
+                 var dataToPost = {
+                 req_subtype: parseInt($("#orderType").val()),
+                 req_flat: parseInt($("#orderAddress").val()),
+                 note: $("#orderText").val(),
+                 userId: 1,
+                 req_status: 1,
+                 dead_line: 'null',
+                 sqlpath: 'insert_cit_req',
+                 t_language_id: 1,
+                 userMail: 1
+                 };
 
-                    $.ajax({
-                        url: config.url.insReq,
-                        type: 'post',
-                        timeout: config.timeout,
-                        contentType: 'application/json;charset=UTF-8',
-                        async: false,
-                        data: JSON.stringify(dataToPost),
-                        beforeSend: function (xhr, opts) {
-                            $(".overlay_progress").show();
-                        },
-                        success: function (result) {
-                            var req_id = parseInt(result);
-                            for (var i = 0; i < filesToSend.length; i++) {
-                                filesToSend[i].req_id = req_id;
-                            }
-                            sendImageXHR();
-                        },
-                        error: function () {
-                            alert("error occured while adding order");
-                        },
-                        complete: function (event, xhr, options) {
-                            $(".overlay_progress").hide();
-                        }
-                    });
-                }, 500);*/
+                 $.ajax({
+                 url: config.url.insReq,
+                 type: 'post',
+                 timeout: config.timeout,
+                 contentType: 'application/json;charset=UTF-8',
+                 async: false,
+                 data: JSON.stringify(dataToPost),
+                 beforeSend: function (xhr, opts) {
+                 $(".overlay_progress").show();
+                 },
+                 success: function (result) {
+                 var req_id = parseInt(result);
+                 for (var i = 0; i < filesToSend.length; i++) {
+                 filesToSend[i].req_id = req_id;
+                 }
+                 sendImageXHR();
+                 },
+                 error: function () {
+                 alert("error occured while adding order");
+                 },
+                 complete: function (event, xhr, options) {
+                 $(".overlay_progress").hide();
+                 }
+                 });
+                 }, 500);*/
                 if (validated!=true){
                     return validated;
                 }
-                //alert('go ajax');
                 $(".overlay_progress").show();
-
                 setTimeout(function () {
                     var dataToPost = {
                         flname: feedbackfio,
@@ -1263,6 +1325,96 @@ $("document").ready(function() {
                         }
                     });
                 }, 500);
+            }
+                break;
+            case 'addrAddBtn':
+            {
+                var addrCity = parseInt($("#addrCity").val());
+                var addrStreet = parseInt($("#addrStreet").val());
+                var addrBuild = parseInt($("#addrBuild").val());
+                var addrFlat = parseInt($("#addrFlat").val());
+
+                var validated = true;
+                if(isNaN(addrCity))
+                {
+                    $("[for=\"addrCity\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"addrCity\"]").hide();
+                }
+                if(isNaN(addrStreet))
+                {
+                    $("[for=\"addrStreet\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"addrStreet\"]").hide();
+                }
+                if(addrBuild == "")
+                {
+                    $("[for=\"addrBuild\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"addrBuild\"]").hide();
+                }
+                if(addrFlat == "")
+                {
+                    $("[for=\"addrFlat\"]").show();
+                    validated = false;
+                }
+                else
+                {
+                    $("[for=\"addrFlat\"]").hide();
+                }
+                if (validated!=true){
+                    return validated;
+                }
+                /*
+                $(".overlay_progress").show();
+                setTimeout(function () {
+                    var dataToPost = {
+                        req_subtype: parseInt($("#orderType").val()),
+                        req_flat: parseInt($("#orderAddress").val()),
+                        note: $("#orderText").val(),
+                        userId: 1,
+                        req_status: 1,
+                        dead_line: 'null',
+                        sqlpath: 'insert_cit_req',
+                        t_language_id: 1,
+                        userMail: 1
+                    };
+                    $.ajax({
+                        url: config.url.insReq,
+                        type: 'post',
+                        timeout: config.timeout,
+                        contentType: 'application/json;charset=UTF-8',
+                        async: false,
+                        data: JSON.stringify(dataToPost),
+                        beforeSend: function (xhr, opts) {
+                            $(".overlay_progress").show();
+                        },
+                        success: function (result) {
+                            var req_id = parseInt(result);
+                            for (var i = 0; i < filesToSend.length; i++) {
+                                filesToSend[i].req_id = req_id;
+                            }
+                            sendImageXHR();
+                        },
+                        error: function () {
+                            alert("error occured while adding order");
+                        },
+                        complete: function (event, xhr, options) {
+                            $(".overlay_progress").hide();
+                        }
+                    });
+                }, 500);
+                */
+            }
                 break;
             default:
                 alert("Неизвестная кнопка");
@@ -1309,5 +1461,20 @@ $("document").ready(function() {
             $("#contextMenuOpenBtn").show();
         });
     });
-    
+
+    $(document).on("change", "#addrCity", function(){
+        $(".overlay_progress").show();
+        var streetlist = getStreetList($("#addrCity").val());
+        $("#addrStreet").html('');
+        //alert(JSON.stringify(streetlist));
+        for(var i = 0; i < streetlist.length; i++)
+        {
+            $("#addrStreet").append($("<option/>", {
+                value: streetlist[i].id,
+                text : streetlist[i].text
+            }));
+        }
+        $(".overlay_progress").hide();
+    });
+
 });

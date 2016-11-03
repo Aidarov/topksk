@@ -311,11 +311,42 @@
 			</div>
 		</div>
 
+		<div class="page" id="addrAddPage">
+			<div class="header">
+				<a class = "backBtn" href="#addrListPage"> </a>
+				<span class = "header_text">{%=o.addr_add%}</span>
+				<span class = "orderAddBtn" id="addrAddBtn"></span>
+			</div>
+			<div class="content">
+				<div class="form">
+					<label for="addrCity">{%=o.city%}</label>
+					<label for="addrCity" class="warning">{%=o.not_filled%}</label>
+					<select class="listofitem" id="addrCity"></select>
+					<label for="addrStreet">{%=o.street%}</label>
+					<label for="addrStreet" class="warning">{%=o.not_filled%}</label>
+					<select class="listofitem" id="addrStreet"></select>
+					<label for="addrBuild">{%=o.building%}</label>
+					<label for="addrBuild" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="addrBuild"/>
+					<label for="addrBuildDrob">{%=o.drob_corp%}</label>
+					<label for="addrBuildDrob" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="addrBuildDrob"/>
+					<label for="addrFlat">{%=o.flat%}</label>
+					<label for="addrFlat" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="addrFlat"/>
+					<label for="addrFlatDrob">{%=o.drob%}</label>
+					<label for="addrFlatDrob" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="addrFlatDrob"/>
+				</div>
+			</div>
+		</div>
+
 		<div class="round-button-open" id="contextMenuOpenBtn"></div>
 		<div class="overlay">
 			<ul class="overlay-menu-list">
 				<li><a href="#orderAddPage">{%=o.send_order%}</a></li>
 				<li><a href="#feedbackAddPage">{%=o.send_feedback%}</a></li>
+				<li><a href="#addrAddPage">{%=o.addr_add%}</a></li>
 				<li><div class="round-button-close" id="contextMenuOpenClose"></div></li>
 			</ul>
 		</div>
