@@ -15,7 +15,8 @@ var config = {
         sprSub: rhost + "sprav/sub",
         orderList: rhost + "search/reqs",
         imageUrl: rhost + "sprav/subid",
-        logout: rhost + "logout"
+        logout: rhost + "logout",
+        execFunc : rhost + "reqs/execFunc"
     },
     lang: function() {
         return (localStorage.getItem("lang") == "RUS") ? 1 : 2;

@@ -1,5 +1,5 @@
 var RUS = {
-    "login_header_text": "Войти в систему, demo, 031428",
+    "login_header_text": "Войти в систему, demo, 041654",
     "login": "Логин",
     "password": "Пароль",
     "login_btn_text": "Войти",
@@ -61,5 +61,8 @@ var RUS = {
     "building": "Здание / дом",
     "drob_corp": "Дробь / корпус",
     "flat": "Квартира",
-    "drob": "Дробь"
+    "drob": "Дробь",
+    "relation": "Отношение к дому",
+    "owner": "Собственник",
+    "citizen": "Житель"
 };

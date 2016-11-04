@@ -328,15 +328,19 @@
 					<label for="addrBuild">{%=o.building%}</label>
 					<label for="addrBuild" class="warning">{%=o.not_filled%}</label>
 					<input type="text" id="addrBuild"/>
-					<label for="addrBuildDrob">{%=o.drob_corp%}</label>
-					<label for="addrBuildDrob" class="warning">{%=o.not_filled%}</label>
-					<input type="text" id="addrBuildDrob"/>
+					<label for="addrBuildSub">{%=o.drob_corp%}</label>
+					<label for="addrBuildSub" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="addrBuildSub"/>
 					<label for="addrFlat">{%=o.flat%}</label>
 					<label for="addrFlat" class="warning">{%=o.not_filled%}</label>
 					<input type="text" id="addrFlat"/>
-					<label for="addrFlatDrob">{%=o.drob%}</label>
-					<label for="addrFlatDrob" class="warning">{%=o.not_filled%}</label>
-					<input type="text" id="addrFlatDrob"/>
+					<label for="addrFlatSub">{%=o.drob%}</label>
+					<label for="addrFlatSub" class="warning">{%=o.not_filled%}</label>
+					<input type="text" id="addrFlatSub"/>
+					<label >{%=o.relation%}</label>
+					<label id="errAddrRel" class="warning">{%=o.not_filled%}</label>
+					<input name="addrRelation" type="radio" value="2">{%=o.owner%}
+					<input name="addrRelation" type="radio" value="1">{%=o.citizen%}
 				</div>
 			</div>
 		</div>

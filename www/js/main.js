@@ -38,6 +38,7 @@ function getClientData() {
 }
 
 function setLanguage() {
+    $("#loginField").val('gabit.omarov@gmail.com');
 
     if(!config.savePassword) {
         $("#loginField").val(null);
@@ -298,6 +299,7 @@ $("document").ready(function() {
     getClientData();
     hashChange();
     body_copy = $("body").html();
+    //alert($("#loginField").val());
 
 
     $("body").html(tmpl(body_copy, langData));
@@ -325,6 +327,9 @@ $("document").ready(function() {
     }
 
     $(document).on("click", "#loginBtn", function(){
+        $("#loginField").val('gabit.omarov@gmail.com');
+        $("#passwordField").val('orapas$123');
+
         var login = $("#loginField").val().trim();
         var password = $("#passwordField").val().trim();
         var validated = true;
@@ -597,6 +602,7 @@ $("document").ready(function() {
         {
             if (config.authorized){
                 $(".overlay_progress").show();
+                $("#addrCity").html('');
                 var citylist = getCityList();
                 $("#addrCity").append($("<option/>", {
                     value: "",
@@ -611,8 +617,12 @@ $("document").ready(function() {
                 }
                 $(".overlay_progress").hide();
             }
-        }
+            $('#addrBuild').mask('9?999', {placeholder: ""});
+            $('#addrBuildSub').mask('/?/////////', {placeholder: ""});
+            $('#addrFlat').mask('9?999', {placeholder: ""});
+            $('#addrFlatSub').mask('/?/////////', {placeholder: ""});
 
+        }
         else if(hash == "exit" && config.authorized)
         {
             $.ajax({
@@ -1331,8 +1341,10 @@ $("document").ready(function() {
             {
                 var addrCity = parseInt($("#addrCity").val());
                 var addrStreet = parseInt($("#addrStreet").val());
-                var addrBuild = parseInt($("#addrBuild").val());
-                var addrFlat = parseInt($("#addrFlat").val());
+                var addrBuild = $("#addrBuild").val().trim();
+                var addrFlat = $("#addrFlat").val().trim();
+                var addrBuildSub = $("#addrBuildSub").val().trim();
+                var addrFlatSub = $("#addrFlatSub").val().trim();
 
                 var validated = true;
                 if(isNaN(addrCity))
@@ -1371,25 +1383,35 @@ $("document").ready(function() {
                 {
                     $("[for=\"addrFlat\"]").hide();
                 }
-                if (validated!=true){
-                    return validated;
+                var addrRel=$("input[name=addrRelation]:checked").val();
+                if (isNaN(addrRel)){
+                    $("#errAddrRel").show();
+                    validated = false;
                 }
-                /*
-                $(".overlay_progress").show();
+                else {
+                    $("#errAddrRel").hide();
+                }
+                if (validated!=true){
+                    alert('inValid');
+                    return validated;
+                };
+
                 setTimeout(function () {
                     var dataToPost = {
-                        req_subtype: parseInt($("#orderType").val()),
-                        req_flat: parseInt($("#orderAddress").val()),
-                        note: $("#orderText").val(),
-                        userId: 1,
-                        req_status: 1,
-                        dead_line: 'null',
-                        sqlpath: 'insert_cit_req',
-                        t_language_id: 1,
-                        userMail: 1
+                        city: addrCity,
+                        street: addrStreet,
+                        home: addrBuild,
+                        fraction: addrBuildSub,
+                        flat: addrFlat,
+                        flatfraction: addrFlatSub,
+                        relation_type: addrRel,
+                        addressId: 1,
+                        sqlpath: 'create_user_inf',
+                        userId: 1
                     };
+                    //alert(JSON.stringify(dataToPost));
                     $.ajax({
-                        url: config.url.insReq,
+                        url: config.url.execFunc,
                         type: 'post',
                         timeout: config.timeout,
                         contentType: 'application/json;charset=UTF-8',
@@ -1399,21 +1421,27 @@ $("document").ready(function() {
                             $(".overlay_progress").show();
                         },
                         success: function (result) {
-                            var req_id = parseInt(result);
-                            for (var i = 0; i < filesToSend.length; i++) {
-                                filesToSend[i].req_id = req_id;
-                            }
-                            sendImageXHR();
+                            alert('result='+JSON.stringify(result));
+                            if (JSON.stringify(result).indexOf("c_t_relation_unq") > 0) {
+                                alert(messages.already_exists);
+                            }else if (result=='KSK_NOT_FOUND'){
+                                alert(messages.ksknotfound);
+                            }else {
+                                alert(messages.saved);
+                            };
+                            $(".overlay_progress").hide();
                         },
-                        error: function () {
-                            alert("error occured while adding order");
+                        error: function (result) {
+                            alert(JSON.stringify(result));
+                            $(".overlay_progress").hide();
                         },
                         complete: function (event, xhr, options) {
+                            alert('complete');
                             $(".overlay_progress").hide();
+                            document.location.href="#addrListPage";
                         }
                     });
                 }, 500);
-                */
             }
                 break;
             default:
