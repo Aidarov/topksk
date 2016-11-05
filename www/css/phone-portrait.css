@@ -246,9 +246,10 @@ input[type="button"]{
   padding: 12px;
   cursor: pointer;
   color: #fff;
-  border: 0px;
+  border: 0;
   margin: auto;
   font-size: 14px;
+  -webkit-appearance: none;
 }
 
 input[type="submit"]:hover{

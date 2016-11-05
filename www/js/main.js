@@ -59,6 +59,7 @@ function setLanguage() {
         $(".language").text(langTxt);
     }
     else {
+        langTxt = config.langList.rus;
         langData = RUS;
         $(".language").text(langTxt);
     }
@@ -296,6 +297,16 @@ function getStreetList(city_id)
 
 
 $("document").ready(function() {
+    if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+        $("div.header").css("height", "80px");
+        $("div.header").css("line-height", "80px");
+        $("div.content").css("padding-top", "90px");
+        $("span.menuBtn").css("height", "80px");
+        $("a.search").css("height", "80px");
+        $("span.orderAddBtn").css("height", "80px");
+        $("a.backBtn").css("height", "80px");
+        $("span.cameraBtn").css("display", "none");
+    }
     getClientData();
     hashChange();
     body_copy = $("body").html();
@@ -318,7 +329,7 @@ $("document").ready(function() {
 
     function updateLanguage() {
         var lang = $(".language").text().trim();
-        var index = ((langItems.indexOf(lang) + 1) == langItems.length) ? 0 : langItems.indexOf(lang) + 1;
+        var index = ((langItems.indexOf(lang) + 1) == langItems.length) ? 0 : langItems.indexOf(lang) + 1;        
         localStorage.setItem("lang",  langItems[index]);        
         $(".language").text(langItems[index]);
         setLanguage();        
