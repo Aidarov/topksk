@@ -14,6 +14,10 @@ function loadingBarShow() {
     document.getElementsByClassName("overlay_progress")[0].style.display = "inline";
 }
 
+function getTranslate(pattern) {
+    return (config.lang() == "1") ? RUS[pattern] : KAZ[pattern];
+}
+
 function getClientData() {
     //alert(config.url.current);
     if (config.authorized) {
