@@ -800,9 +800,7 @@ $("document").ready(function() {
 
     $(document).on("click","#orderFilterBtn", function(){
         var langId = config.lang();
-
         var dataToPost = {};
-
         if($("#orderId").val().trim() == "")
         {
             dataToPost = {
@@ -1422,21 +1420,17 @@ $("document").ready(function() {
                         },
                         success: function (result) {
                             alert('result='+JSON.stringify(result));
-                            if (JSON.stringify(result).indexOf("c_t_relation_unq") > 0) {
-                                alert(messages.already_exists);
+                            /*if (JSON.stringify(result).indexOf("c_t_relation_unq") > 0) {
+                                alert(o.addr_exists);
                             }else if (result=='KSK_NOT_FOUND'){
-                                alert(messages.ksknotfound);
-                            }else {
-                                alert(messages.saved);
+                                alert(o.ksknotfound);
                             };
-                            $(".overlay_progress").hide();
+                            */
                         },
                         error: function (result) {
                             alert(JSON.stringify(result));
-                            $(".overlay_progress").hide();
                         },
                         complete: function (event, xhr, options) {
-                            alert('complete');
                             $(".overlay_progress").hide();
                             document.location.href="#addrListPage";
                         }
