@@ -1434,13 +1434,13 @@ $("document").ready(function() {
                             $(".overlay_progress").show();
                         },
                         success: function (result) {
-                            alert('result='+JSON.stringify(result));
-                            /*if (JSON.stringify(result).indexOf("c_t_relation_unq") > 0) {
-                                alert(o.addr_exists);
+                            //alert('result='+JSON.stringify(result));
+                            if (JSON.stringify(result).indexOf("c_t_relation_unq") > 0) {
+                                alert(getTranslate("addr_exists"));
                             }else if (result=='KSK_NOT_FOUND'){
-                                alert(o.ksknotfound);
+                                alert(getTranslate("ksknotfound"));
                             };
-                            */
+                            
                         },
                         error: function (result) {
                             alert(JSON.stringify(result));
