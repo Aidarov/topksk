@@ -8,7 +8,9 @@
 		<link rel="stylesheet" href="css/tablet-portrait.css" media="only screen and (min-width: 600px)" />
 		<link rel="stylesheet" href="css/tablet-landscape.css" media="only screen and (min-width: 801px)" />
 		<link rel="stylesheet" href="css/ultra-device.css" media="only screen and (min-width: 1025px)" />-->
-		<link rel="stylesheet" href="css/main.css" media="screen" />		
+		<link rel="stylesheet" href="css/main.css" media="screen" />
+		<link rel="stylesheet" href="css/select2.css" rel="stylesheet"/>
+
 		<script type="text/javascript" charset="utf-8" src="js/jquery.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/hammer.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/jquery.hammer.js"></script>
@@ -21,6 +23,15 @@
 		<script type="text/javascript" charset="utf-8" src="js/main.js"></script>	
 		<script type="text/javascript" src="js/menu.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/moment.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/jquery_maskedinput_122.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/select2.js"></script>
+		<script type="text/javascript" charset="utf-8">
+
+			$(document).ready(function() {
+				$(".select2-searchable").select2();
+			});
+		</script>
+
 	</head>
 	<body>
 		<div class="slideMenu">
@@ -34,7 +45,6 @@
 			</ul>
 		</div>		
 		<div class="page" id="mainPage">
-			
             <div class="header">
 				<span class = "header_text">{%=o.login_header_text%}</span>
 				<span class = "language">&nbsp;</span>
@@ -49,6 +59,19 @@
 						<input type="password" placeholder="{%=o.password%}" id="passwordField" />
 						<span id="visiblePassword" class="visiblePassword"></span>
 					</div>
+					<!--select class="listofitem">
+						<option value="1">one</option>
+						<option value="2">two</option>
+						<option value="3">three</option>
+					</select>
+					<div class="listofitem">
+					<select class="select2-searchable">
+						<option value="1">one</option>
+						<option value="2">two</option>
+						<option value="3">three</option>
+					</select>
+					</div-->
+
 					<div class="savePasswordCls">
 						<input type="checkbox" id="savePassword" />&nbsp;{%=o.save_password%}
 					</div>					
@@ -324,7 +347,9 @@
 					<select class="listofitem" id="addrCity"></select>
 					<label for="addrStreet">{%=o.street%}</label>
 					<label for="addrStreet" class="warning">{%=o.not_filled%}</label>
-					<select class="listofitem" id="addrStreet"></select>
+					<select id="addrStreet" class="select2-searchable">
+						<!--select id="addrStreet" class="listofitem"-->
+					</select>
 					<label for="addrBuild">{%=o.building%}</label>
 					<label for="addrBuild" class="warning">{%=o.not_filled%}</label>
 					<input type="text" id="addrBuild"/>

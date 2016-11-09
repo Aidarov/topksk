@@ -1,5 +1,5 @@
 var RUS = {
-    "login_header_text": "Войти в систему, demo, 041654",
+    "login_header_text": "Войти в систему, demo, v2",
     "login": "Логин",
     "password": "Пароль",
     "login_btn_text": "Войти",

@@ -42,8 +42,6 @@ function getClientData() {
 }
 
 function setLanguage() {
-    $("#loginField").val('gabit.omarov@gmail.com');
-
     if(!config.savePassword) {
         $("#loginField").val(null);
         $("#passwordField").val(null);
@@ -311,6 +309,7 @@ $("document").ready(function() {
         $("a.backBtn").css("height", "80px");
         $("span.cameraBtn").css("display", "none");
     }
+
     getClientData();
     hashChange();
     body_copy = $("body").html();
@@ -342,8 +341,8 @@ $("document").ready(function() {
     }
 
     $(document).on("click", "#loginBtn", function(){
-        $("#loginField").val('gabit.omarov@gmail.com');
-        $("#passwordField").val('orapas$123');
+        //$("#loginField").val('gabit.omarov@gmail.com');
+        //$("#passwordField").val('orapas$123');
 
         var login = $("#loginField").val().trim();
         var password = $("#passwordField").val().trim();
@@ -420,6 +419,9 @@ $("document").ready(function() {
             $("#contextMenuOpenBtn").hide();            
         }
 
+
+        // Авторизация
+
         if(hash == "" || hash == "mainPage" || hash == null)
         {
             if(config.authorized) {
@@ -444,6 +446,9 @@ $("document").ready(function() {
                 }                                
             }            
         }
+
+
+
         
         $(".page").hide();
         $("#"+hash).css("display", "block");
@@ -621,7 +626,7 @@ $("document").ready(function() {
                 var citylist = getCityList();
                 $("#addrCity").append($("<option/>", {
                     value: "",
-                    text : ""
+                    text : "..."
                 }));
                 for(var i = 0; i < citylist.length; i++)
                 {
@@ -731,9 +736,10 @@ $("document").ready(function() {
     }
 
     function getBase64(file) {
+        //return "";
         //alert('getBase64 begin');
         //alert(file.lastModifiedDate.toISOString());
-        $(".overlay_progress").show();
+        /*$(".overlay_progress").show();
         var reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
@@ -755,7 +761,47 @@ $("document").ready(function() {
         };
         reader.onerror = function (error) {
             alert("file not formatted");
+        };*/
+
+
+        //alert(734);
+        $(".overlay_progress").show();
+        //alert(735);
+        var reader = new FileReader();
+        //alert(736);
+        reader.readAsDataURL(file);
+        //alert(737);
+        reader.onload = function () {
+            //alert(738);
+            var fileContent = this.result.substring(this.result.indexOf("base64") + 7);
+            //alert(739);
+            var guid = config.guid();
+            //alert(740);
+            filesToSend.push({
+                content: fileContent,
+                file: {},
+                modified: new Date(file.lastModifiedDate).toISOString(),
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                req_id: guid
+            });
+            //alert(741);
+            $(".overlay_progress").hide();
+            //alert(742);
+            drawBase64(this.result, guid);
+            //alert(743);
+
         };
+        //alert(744);
+        reader.onerror = function (error) {
+            alert("file not formatted");
+            $(".overlay_progress").hide();
+        };
+        //alert(745);
+
+
+
     }
 
     /*$(".attachFileBtn").on("click", function() {
@@ -1405,7 +1451,7 @@ $("document").ready(function() {
                     $("#errAddrRel").hide();
                 }
                 if (validated!=true){
-                    alert('inValid');
+                    alert(getTranslate("not_filled"));
                     return validated;
                 };
 
@@ -1500,9 +1546,13 @@ $("document").ready(function() {
     });
 
     $(document).on("change", "#addrCity", function(){
-        $(".overlay_progress").show();
+        //$(".overlay_progress").show();
         var streetlist = getStreetList($("#addrCity").val());
         $("#addrStreet").html('');
+        $("#addrStreet").append($("<option/>", {
+            value: "",
+            text : "..."
+        }));
         //alert(JSON.stringify(streetlist));
         for(var i = 0; i < streetlist.length; i++)
         {
@@ -1511,7 +1561,10 @@ $("document").ready(function() {
                 text : streetlist[i].text
             }));
         }
-        $(".overlay_progress").hide();
+        /*$("#addrStreet").addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        }, false);
+        $(".overlay_progress").hide();*/
     });
 
 });
