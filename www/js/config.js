@@ -1,7 +1,7 @@
 var rhost="https://demo.topksk.kz/";
 //var rhost="https://local.topksk.kz/";
 var config = {
-    timeout: 15000,
+    timeout: 90000,
     url : {
         root: rhost,
         current : rhost + "supplierProfile/employees/current",
