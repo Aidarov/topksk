@@ -28,7 +28,6 @@ function getClientData() {
             processData: false,
             timeout: this.timeout,
             cache: false,
-            async: false,
             success: function(data){
                 oClientData=data;
                 $("#firstName").text(oClientData.user_info.first_name);
@@ -181,12 +180,14 @@ function Authorize() {
                 $("#loginField").val(null);
                 $("#passwordField").val(null);
                 localStorage.removeItem("login");
-                localStorage.removeItem("password");              
+                localStorage.removeItem("password");
+                localStorage.removeItem("savePassword");
             }
             else
             {
                 localStorage.setItem("login", $("#loginField").val());
                 localStorage.setItem("password", $("#passwordField").val());
+                localStorage.setItem("savePassword", true);
             }
             $("#firstName").text(data.user_info.first_name);
             //window.plugins.PushbotsPlugin.updateAlias(data.user_info.recid);

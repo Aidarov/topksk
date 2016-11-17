@@ -35,6 +35,6 @@ var config = {
         kaz: "KAZ"
     },
     authorized: false,
-    savePassword: false,
+    savePassword: ((localStorage.getItem("savePassword") == "true") ? true : false),
     availableContextMenu: ["notifyListPage", "orderListPage", "orderLookUpPage", "notifyLookUpPage", "languagePage", "addrListPage"]
 };
