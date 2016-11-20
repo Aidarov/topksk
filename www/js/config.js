@@ -34,7 +34,7 @@ var config = {
         rus: "RUS",
         kaz: "KAZ"
     },
-    authorized: false,
+    authorized: function() { return ((localStorage.getItem("authorized")) == "true" ? true : false)},
     savePassword: ((localStorage.getItem("savePassword") == "true") ? true : false),
     availableContextMenu: ["notifyListPage", "orderListPage", "orderLookUpPage", "notifyLookUpPage", "languagePage", "addrListPage"]
 };

@@ -18,23 +18,18 @@ function getTranslate(pattern) {
     return (config.lang() == "1") ? RUS[pattern] : KAZ[pattern];
 }
 
-function getClientData() {
+function getClientData(callback) {
     //alert(config.url.current);
-    if (config.authorized) {
+    if (config.authorized()) {
         $.ajax({
             url: config.url.current,
             contentType: 'application/x-www-form-urlencoded',
-            crossDomain: true,
-            processData: false,
-            timeout: this.timeout,
-            cache: false,
             success: function(data){
                 oClientData=data;
                 $("#firstName").text(oClientData.user_info.first_name);
-                config.authorized = true;
+                callback();
             },
             error: function(xhr, ajaxOptions, thrownError){
-                config.authorized = false;
             }
         });
     }
@@ -191,7 +186,7 @@ function Authorize() {
             }
             $("#firstName").text(data.user_info.first_name);
             //window.plugins.PushbotsPlugin.updateAlias(data.user_info.recid);
-            config.authorized = true;
+            localStorage.setItem("authorized", "true");
             $(this).attr("type", "password");
             $("#visiblePassword").removeClass("visiblePassword-show");
             localStorage.setItem("userFirstName", data.user_info.first_name);
@@ -325,8 +320,10 @@ $("document").ready(function() {
         $("a.backBtn").css("height", "80px");
     }
 
-    getClientData();
-    hashChange();
+    getClientData(function(){
+        hashChange();
+    });
+    
     body_copy = $("body").html();
     //alert($("#loginField").val());
 
@@ -439,7 +436,7 @@ $("document").ready(function() {
 
         if(hash == "" || hash == "mainPage" || hash == null)
         {
-            if(config.authorized) {
+            if(config.authorized()) {
                 //window.history.forward();
                 //return;
                 hash = "notifyListPage";
@@ -452,7 +449,7 @@ $("document").ready(function() {
             }
         }
         else {
-            if(!config.authorized) {
+            if(!config.authorized()) {
                 if(hash != "forgotPassword" && hash != "registration")
                 {
                     $(".page").hide();
@@ -592,7 +589,7 @@ $("document").ready(function() {
         }
         else if(hash == "feedbackAddPage")
         {
-            if (config.authorized){
+            if (config.authorized()){
                 $('#feedbackfio').val(oClientData.user_info.first_name+' '+oClientData.user_info.last_name);
                 $('#feedbackphone').val(oClientData.user_info.phone_number);
                 $('#feedbackemail').val(oClientData.user_info.email);
@@ -645,7 +642,7 @@ $("document").ready(function() {
         }
         else if(hash == "addrAddPage")
         {
-            if (config.authorized){
+            if (config.authorized()){
                 $(".overlay_progress").show();
                 $("#addrCity").html('');
                 var citylist = getCityList();
@@ -668,7 +665,7 @@ $("document").ready(function() {
             $('#addrFlatSub').mask('/?/////////', {placeholder: ""});
 
         }
-        else if(hash == "exit" && config.authorized)
+        else if(hash == "exit" && config.authorized())
         {
             $.ajax({
                 url: config.url.logout,
@@ -676,13 +673,14 @@ $("document").ready(function() {
                 timeout: config.timeout,
                 data: {},
                 success: function() {
-                    config.authorized = false;
+                    localStorage.setItem("authorized", "false");
+                    document.location.hash = "";
                 },
                 error: function() {
                     //todo: 
                 },
                 complete: function() {                    
-                    document.location.hash = "";
+                    
                 }
             });               
         }
@@ -853,9 +851,6 @@ $("document").ready(function() {
                 $(".overlay_progress").show();
             },
             success: function (data, textStatus, request) {
-                alert("success");
-                alert(data);
-                alert(JSON.stringify(data));
                 response = data;
             },
             error: function (xhr, ajaxOptions, thrownError) {
