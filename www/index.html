@@ -43,7 +43,8 @@
 				<li link="languagePage">{%=o.language%}</li>
 				<li link="exit">{%=o.exit%}</li>
 			</ul>
-		</div>		
+		</div>
+
 		<div class="page" id="mainPage">
             <div class="header">
 				<span class = "header_text">{%=o.login_header_text%}</span>
@@ -59,22 +60,9 @@
 						<input type="password" placeholder="{%=o.password%}" id="passwordField" />
 						<span id="visiblePassword" class="visiblePassword"></span>
 					</div>
-					<!--select class="listofitem">
-						<option value="1">one</option>
-						<option value="2">two</option>
-						<option value="3">three</option>
-					</select>
-					<div class="listofitem">
-					<select class="select2-searchable">
-						<option value="1">one</option>
-						<option value="2">two</option>
-						<option value="3">three</option>
-					</select>
-					</div-->
-
-					<div class="savePasswordCls">
-						<input type="checkbox" id="savePassword" />&nbsp;{%=o.save_password%}
-					</div>					
+						<div class="savePasswordCls">
+							<input type="checkbox" id="savePassword" />&nbsp;{%=o.save_password%}
+						</div>
 					<input type="button" value="{%=o.login_btn_text%}" id="loginBtn"/>
 					<a class="small" href="#forgotPassword">{%=o.restore_password_link%}</a>
 					<a class="small" href="#registration">{%=o.registration_link%}</a>
@@ -364,8 +352,13 @@
 					<input type="text" id="addrFlatSub"/>
 					<label >{%=o.relation%}</label>
 					<label id="errAddrRel" class="warning">{%=o.not_filled%}</label>
-					<input name="addrRelation" type="radio" value="2">{%=o.owner%}
-					<input name="addrRelation" type="radio" value="1">{%=o.citizen%}
+					<div>
+						<input name="addrRelation" type="radio" value="2">{%=o.owner%}
+					</div>
+					<div>
+						<input name="addrRelation" type="radio" value="1">{%=o.citizen%}
+					</div>
+
 				</div>
 			</div>
 		</div>
