@@ -1,5 +1,4 @@
-var rhost="https://demo.topksk.kz/";
-//var rhost="https://local.topksk.kz/";
+var rhost="https://topksk.kz/";
 var config = {
     timeout: 90000,
     url : {
@@ -19,7 +18,7 @@ var config = {
         execFunc : rhost + "reqs/execFunc"
     },
     lang: function() {
-        return (localStorage.getItem("lang") == "RUS") ? 1 : 2;
+        return (localStorage.getItem("lang") == "KAZ") ? 2 : 1;
     },    
     guid: function () {
         function s4() {

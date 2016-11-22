@@ -36,7 +36,34 @@ function getClientData(callback) {
     }
 }
 
+function Login(login, password, callback)
+{
+    $.ajax({
+        url: config.url.login,
+        data: "role="+login+"&password="+password+"&authurl=login.html",
+        contentType: 'application/x-www-form-urlencoded',
+        timeout: config.timeout,
+        type: 'POST',
+        processData: false,
+        crossDomain: true,
+        beforeSend : function(xhr, opts){
+            $(".overlay_progress").show();
+        },
+        success: function(data){
+            callback();
+        },
+        error: function(xhr, ajaxOptions, thrownError){
+            alert("please check the internet connection");
+            alert(JSON.stringify(thrownError));
+        },
+        complete: function(event,xhr,options) {
+            $(".overlay_progress").hide();
+        }
+    });
+}
+
 function setLanguage() {
+//alert('setLanguage config.savePassword='+config.savePassword);
     if(!config.savePassword) {
         $("#loginField").val(null);
         $("#passwordField").val(null);
@@ -49,6 +76,7 @@ function setLanguage() {
         $("#savePassword").prop("checked", true);
     }
     var langTxt = config.langList.kaz;
+
     if(localStorage.getItem("lang") == langTxt)
     {
         langTxt = config.langList.kaz;
@@ -60,12 +88,26 @@ function setLanguage() {
         langData = RUS;
         $(".language").text(langTxt);
     }
+    //alert('setLanguage langTxt='+langTxt);
 
     $("#languageList").val(langTxt);
+
+    $("#label_header").text(getTranslate("login_header_text"));
+    $("#loginField").attr("placeholder",getTranslate("login"));
+    $("#passwordField").attr("placeholder",getTranslate("password"));
+    $("#loginBtn").val(getTranslate("login_btn_text"));
+    $("#lsavePassword").text(getTranslate("save_password"));
+
+    $("#lforgotPassword").text(getTranslate("restore_password_link"));
+    $("#lregistration").text(getTranslate("registration_link"));
+
+
     $("#contextMenuOpenBtn").show();
+    //alert('end');
 }
 
-function getOrderReqType(callback){
+function getOrderReqType(callback)
+{
     var langId = config.lang();
 
     var dataToPost = {
@@ -95,7 +137,8 @@ function getOrderReqType(callback){
     });
 }
 
-function getStatuses(callback){
+function getStatuses(callback)
+{
     var langId = config.lang();
 
     var dataToPost = {
@@ -128,7 +171,8 @@ function getStatuses(callback){
     return response;
 }
 
-function getUserAddress(callback){
+function getUserAddress(callback)
+{
     var langId = config.lang();
 
     var response = [];
@@ -193,7 +237,7 @@ function Authorize() {
         },
         error: function(xhr, ajaxOptions, thrownError){
             alert("Authorize fails");
-            alert("xhr="+JSON.stringify(xhr));
+            alert("thrownError="+JSON.stringify(thrownError));
         }
     });
 }
@@ -258,7 +302,8 @@ function DrawNotifyList(){
     
 }
 
-function getCityList(){
+function getCityList()
+{
     var langId = config.lang();
     var dataToPost = {
         lang_id: langId,
@@ -281,7 +326,8 @@ function getCityList(){
     return response;
 }
 
-function getStreetList(city_id){
+function getStreetList(city_id)
+{
     var langId = config.lang();
     var dataToPost = {
         lang_id: langId,
@@ -305,34 +351,6 @@ function getStreetList(city_id){
     return response;
 }
 
-function f_login(login, password){
-    $.ajax({
-        url: config.url.login,
-        data: "role="+login+"&password="+password+"&authurl=login.html",
-        contentType: 'application/x-www-form-urlencoded',
-        timeout: config.timeout,
-        type: 'POST',
-        processData: false,
-        crossDomain: true,
-        beforeSend : function(xhr, opts){
-            $(".overlay_progress").show();
-        },
-        success: function(data){
-            //Authorize();
-        },
-        error: function(xhr, ajaxOptions, thrownError){
-            alert("please check the internet connection");
-            alert(thrownError);
-            alert(JSON.stringify(thrownError));
-            return false;
-        },
-        complete: function(event,xhr,options) {
-            $(".overlay_progress").hide();
-            return true;
-        }
-    });
-}
-
 $("document").ready(function() {
     if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
         $("div.header").css("height", "80px");
@@ -344,10 +362,17 @@ $("document").ready(function() {
         $("a.backBtn").css("height", "80px");
     }
 
-    getClientData(function(){
-        f_login(localStorage.getItem("login"), localStorage.getItem("password"));
-        hashChange();
-    });
+
+    var login = localStorage.getItem("login");
+    var password = localStorage.getItem("password");
+    if(config.authorized())
+    {
+        Login(login, password, function(){
+            getClientData(function(){
+                hashChange();
+            });
+        });
+    }
     body_copy = $("body").html();
 
     $("body").html(tmpl(body_copy, langData));
@@ -634,7 +659,8 @@ $("document").ready(function() {
         return pattern.test(emailAddress);
     };
 
-    function getImage(suid, callback) {
+    function getImage(suid, callback)
+    {
         var dataToPost = {
             name: "cur_image",
             sid: parseInt(suid)
@@ -664,7 +690,8 @@ $("document").ready(function() {
         return response;
     }
 
-    function getOrderByid(id, callback) {
+    function getOrderByid(id, callback)
+    {
         var langId = config.lang();
 
         var dataToPost = {
@@ -760,6 +787,9 @@ $("document").ready(function() {
     });
 
     $(document).on("click", "#loginBtn", function(){
+        //$("#loginField").val('gabit.omarov@gmail.com');
+        //$("#passwordField").val('orapas$123');
+
         var login = $("#loginField").val().trim();
         var password = $("#passwordField").val().trim();
         var validated = true;
@@ -785,11 +815,33 @@ $("document").ready(function() {
 
         if(validated)
         {
-            var s_log=f_login(login, password);
-            Authorize();
+//alert(config.url.login);
+            $.ajax({
+                url: config.url.login,
+                data: "role="+login+"&password="+password+"&authurl=login.html",
+                contentType: 'application/x-www-form-urlencoded',
+                timeout: config.timeout,
+                type: 'POST',
+                processData: false,
+                crossDomain: true,
+                beforeSend : function(xhr, opts){
+                    $(".overlay_progress").show();
+                },
+                success: function(data){
+                    Authorize();
+                },
+                error: function(xhr, ajaxOptions, thrownError){
+                    alert("please check the internet connection");
+                    alert(JSON.stringify(thrownError));
+                },
+                complete: function(event,xhr,options) {
+                    $(".overlay_progress").hide();
+                }
+            });            
         }
-    });
+        
 
+    });
     $(document).on("click", "#orderFilterBtn", function(){
         var langId = config.lang();
         var dataToPost = {};
